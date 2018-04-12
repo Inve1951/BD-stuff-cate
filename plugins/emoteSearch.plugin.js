@@ -1,13 +1,13 @@
-//META{"name":"emoteSearch"}*//
+//META{"name":"emoteSearch", "displayName":"emoteSearch"}*//
 
-/* global BdApi:false, emotesTwitch:false, subEmotesTwitch:false, emotesFfz:false, emotesBTTV:false, emotesBTTV2:false */
+/* global BdApi:false, emotesTwitch:false, subEmotesTwitch:false, emotesFfz:false, emotesBTTV:false, emotesBTTV2:false, performance:false */
 
 /* eslint-disable no-console */
 
 class emoteSearch {
 
 	constructor() {
-        this.lastSearch = '';
+		this.lastSearch = '';
 		this.emoteStore = {};
 
 		this.css = `/* emoteSearch CSS */
@@ -89,7 +89,7 @@ class emoteSearch {
 					</div>
 					<div class="scrollerWrap-2uBjct content-1Cut5s scrollerThemed-19vinI themeGhostHairline-2H8SiW">
 						<div class="emote-list scroller-fzNley inner-tqJwAU">
-	
+
 						</div>
 					</div>
 					<div class="footer footer-1PYmcw">
@@ -105,20 +105,17 @@ class emoteSearch {
 	}
 
 	start() {
-		emotesFfz.hasOwnProperty = function(prop) {
-			return Object.hasOwnProperty.call(this, prop);
-		}
 		BdApi.injectCSS(this.getName(), this.css);
 		this.attachParser();
-		var start = (new Date).getTime();
+		var start = performance.now();
 		try {
-			this.emoteStore = jQuery.extend({}, emotesTwitch, subEmotesTwitch, emotesFfz, emotesBTTV, emotesBTTV2);
+			this.emoteStore = Object.assign({}, emotesTwitch, subEmotesTwitch, emotesFfz, emotesBTTV, emotesBTTV2);
 			if (Object.keys(this.emoteStore).length < 10) {
 				console.error('emoteSearch: zerebos probably broke it go ping him');
 			} else {
 				console.log('emoteSearch: emotes loaded');
 			}
-			var diff = (new Date).getTime() - start;
+			var diff = performance.now() - start;
 			console.log('emoteSearch: took ' + diff + 'ms');
 		}
 		catch(e) { console.warn('emoteSearch: failed to load emotes: ' + e); }
@@ -141,18 +138,18 @@ class emoteSearch {
 		try {
 			var val = $('.textArea-20yzAH').val();
 			if (val.startsWith('/es')){
-				var arg = val.split(' ');
-				if (arg[1] != undefined){
-                    this.lastSearch = arg[1];
-					this.showResults(this.search(arg[1])); 
-				}
-				this.setText("");
 				e.preventDefault();
 				e.stopPropagation();
+				var arg = val.split(' ')[1];
+				if (arg != null){
+					this.lastSearch = arg;
+					this.showResults(this.search(arg));
+				}
+				this.setText("");
 				return;
 			}
 		}
-		catch(e) { console.warn("emoteSearch: unable to attach to textarea: " + e); }
+		catch(e) { console.warn("emoteSearch: failed to show search results: " + e); }
 	}
 
 	showResults(results) {
@@ -202,10 +199,10 @@ class emoteSearch {
 			var emote = "";
 
 			if (emotesTwitch.hasOwnProperty(emoteKey)) emote = '//static-cdn.jtvnw.net/emoticons/v1/' + emotesTwitch[emoteKey].id + '/1.0' ;
-			else if (subEmotesTwitch.hasOwnProperty(emoteKey)) emote = '//static-cdn.jtvnw.net/emoticons/v1/' + subEmotesTwitch[emoteKey] + '/1.0' ;
-			else if (emotesFfz.hasOwnProperty(emoteKey)) emote = '//cdn.frankerfacez.com/emoticon/' + emotesFfz[emoteKey] + '/1'; 
-			else if (emotesBTTV.hasOwnProperty(emoteKey)) emote = emotesBTTV[emoteKey];
-			else if (emotesBTTV2.hasOwnProperty(emoteKey)) emote = '//cdn.betterttv.net/emote/' + emotesBTTV2[emoteKey] + '/1x'; 
+			else if (Object.hasOwnProperty.call(subEmotesTwitch, emoteKey)) emote = '//static-cdn.jtvnw.net/emoticons/v1/' + subEmotesTwitch[emoteKey] + '/1.0' ;
+			else if (Object.hasOwnProperty.call(emotesFfz, emoteKey)) emote = '//cdn.frankerfacez.com/emoticon/' + emotesFfz[emoteKey] + '/1';
+			else if (Object.hasOwnProperty.call(emotesBTTV, emoteKey)) emote = emotesBTTV[emoteKey];
+			else if (Object.hasOwnProperty.call(emotesBTTV2, emoteKey)) emote = '//cdn.betterttv.net/emote/' + emotesBTTV2[emoteKey] + '/1x';
 
 			var element = $(`<span class="emotewrapper"><a href="#"><img draggable="false" class="emote" src="${emote}" alt="${emoteKey}"></a></span>`);
 			((el, key) => {
@@ -255,8 +252,6 @@ class emoteSearch {
 	getSettingsPanel() { return ""; }
 	getName() { return "emoteSearch"; }
 	getDescription() { return "Search through all emotes in bd with /es emoteuwant"; }
-	getVersion() { return "1.0"; }
+	getVersion() { return "1.0.1"; }
 	getAuthor() { return "Ckat/Catblaster edited by confus, rewritten by zerebos"; }
 }
-
-module.exports = emoteSearch;
