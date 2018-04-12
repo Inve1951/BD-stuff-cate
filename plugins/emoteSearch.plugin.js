@@ -198,7 +198,7 @@ class emoteSearch {
 			var emoteKey = results[i];
 			var emote = "";
 
-			if (emotesTwitch.hasOwnProperty(emoteKey)) emote = '//static-cdn.jtvnw.net/emoticons/v1/' + emotesTwitch[emoteKey].id + '/1.0' ;
+			if (Object.hasOwnProperty.call(emotesTwitch, emoteKey)) emote = '//static-cdn.jtvnw.net/emoticons/v1/' + emotesTwitch[emoteKey].id + '/1.0' ;
 			else if (Object.hasOwnProperty.call(subEmotesTwitch, emoteKey)) emote = '//static-cdn.jtvnw.net/emoticons/v1/' + subEmotesTwitch[emoteKey] + '/1.0' ;
 			else if (Object.hasOwnProperty.call(emotesFfz, emoteKey)) emote = '//cdn.frankerfacez.com/emoticon/' + emotesFfz[emoteKey] + '/1';
 			else if (Object.hasOwnProperty.call(emotesBTTV, emoteKey)) emote = emotesBTTV[emoteKey];
