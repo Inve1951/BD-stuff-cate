@@ -249,7 +249,6 @@ class emoteSearch {
 
 	load() {}
 	onSwitch() { this.attachParser(); }
-	getSettingsPanel() { return ""; }
 	getName() { return "emoteSearch"; }
 	getDescription() { return "Search through all emotes in bd with /es emoteuwant"; }
 	getVersion() { return "1.0.1"; }
