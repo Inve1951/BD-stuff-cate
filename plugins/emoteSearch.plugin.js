@@ -136,16 +136,20 @@ class emoteSearch {
 		var code = e.keyCode || e.which;
 		if(code !== 13) return;
 		try {
-			var val = $('.textArea-20yzAH').val();
-			if (val.startsWith('/es')){
+			var val = $('.textArea-20yzAH').val().trim(),
+				split = val.split(' '),
+				commandIndex = split.indexOf('/es'),
+				text = "",
+				query = null;
+			if (commandIndex >= 0) {
 				e.preventDefault();
 				e.stopPropagation();
-				var arg = val.split(' ')[1];
-				if (arg != null){
-					this.lastSearch = arg;
-					this.showResults(this.search(arg));
+				if (commandIndex > 0) text = split.slice(0, commandIndex).join(' ');
+				if (query = split[commandIndex + 1]) {
+					this.lastSearch = query;
+					this.showResults(this.search(query));
 				}
-				this.setText("");
+				this.setText(text);
 				return;
 			}
 		}
@@ -153,42 +157,49 @@ class emoteSearch {
 	}
 
 	showResults(results) {
-		var modal = $(this.modalHTML);
-		var emoteList = modal.find('.emote-list');
-		var closeButton = modal.find('.close-button');
-		var backdrop = modal.find('.backdrop-2ohBEd');
-		var nextButton = modal.find('.next');
-		var prevButton = modal.find('.previous');
-		var pageLabel = modal.find('.page-indicator');
+		var modal = $(this.modalHTML),
+			emoteList = modal.find('.emote-list'),
+			closeButton = modal.find('.close-button'),
+			backdrop = modal.find('.backdrop-2ohBEd'),
+			nextButton = modal.find('.next'),
+			prevButton = modal.find('.previous'),
+			pageLabel = modal.find('.page-indicator');
+
 		var closeModal = () => {
 			modal.addClass('closing');
+			$(document).off(`mouseover.${this.getName()}`);
 			setTimeout(() => { modal.remove(); }, 300);
 		};
 		closeButton.on('click', closeModal);
 		backdrop.on('click', closeModal);
 		modal.find('.title').text(results.length + " Results containing '" + this.lastSearch + "'");
 
-		var totalPages = results.length % 100 == 0 ? results.length / 100 : (results.length / 100 | 0) + 1;
-		var currentPage = 1;
-		if (totalPages == 0) totalPages = 1;
+		var totalPages = results.length / 100,
+			currentPage = totalPages && 1;
+		if (results.length % 100) totalPages = (0 | totalPages) + 1;
 
 		var changePage = (pageNum) => {
 			currentPage = pageNum;
-			if (totalPages == currentPage) nextButton.addClass("disabled");
+			if (totalPages === currentPage) nextButton.addClass("disabled");
 			else nextButton.removeClass("disabled");
-			if (currentPage == 1) prevButton.addClass("disabled");
+			if (currentPage === 0 || currentPage === 1) prevButton.addClass("disabled");
 			else prevButton.removeClass("disabled");
 			pageLabel.text(`Page ${currentPage}/${totalPages}`);
 			emoteList.empty();
-			emoteList.append(this.getEmoteElements(results, (pageNum - 1) * 100, ((pageNum - 1) * 100) + 100));
+			if (currentPage) emoteList.append(this.getEmoteElements(results, (pageNum - 1) * 100, ((pageNum - 1) * 100) + 100));
 		};
 
-		changePage(1);
+		changePage(currentPage);
 
 		nextButton.on('click', () => {changePage(currentPage + 1);});
 		prevButton.on('click', () => {changePage(currentPage - 1);});
 
 		$("body").append(modal);
+
+		$(document).on(`mouseover.${this.getName()}`, ".emote", () => {
+			let tipsy = document.querySelector(".tipsy");
+			if (tipsy) modal[0].appendChild(tipsy);
+		});
 	}
 
 	getEmoteElements(results, start, end) {
@@ -215,8 +226,9 @@ class emoteSearch {
 	}
 
 	search(s) {
+		s = s.toLowerCase()
 		var matches = [];
-		for (var k in this.emoteStore) if (k.toLowerCase().indexOf(s.toLowerCase()) > -1) matches.push(k);
+		for (var k in this.emoteStore) if (k.toLowerCase().indexOf(s) > -1) matches.push(k);
 		return matches;
 	}
 
@@ -251,6 +263,6 @@ class emoteSearch {
 	onSwitch() { this.attachParser(); }
 	getName() { return "emoteSearch"; }
 	getDescription() { return "Search through all emotes in bd with /es emoteuwant"; }
-	getVersion() { return "1.0.1"; }
+	getVersion() { return "1.1.0"; }
 	getAuthor() { return "Ckat/Catblaster edited by confus, rewritten by zerebos"; }
 }
