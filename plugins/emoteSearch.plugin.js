@@ -1,4 +1,4 @@
-//META{"name":"emoteSearch", "displayName":"emoteSearch"}*//
+//META{"name": "emoteSearch", "displayName":"emoteSearch"}*//
 
 /* global BdApi:false, emotesTwitch:false, subEmotesTwitch:false, emotesFfz:false, emotesBTTV:false, emotesBTTV2:false, performance:false */
 
