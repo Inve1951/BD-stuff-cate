@@ -1,4 +1,4 @@
-//META{"name": "translateOption"}*//
+//META{ "name": "translateOption"}*//
 var translateOption = function(){};
 
 translateOption.prototype.replace = function(){
