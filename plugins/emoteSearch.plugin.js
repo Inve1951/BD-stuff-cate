@@ -263,6 +263,6 @@ class emoteSearch {
 	onSwitch() { this.attachParser(); }
 	getName() { return "emoteSearch"; }
 	getDescription() { return "Search through all emotes in bd with /es emoteuwant"; }
-	getVersion() { return "1.1.0-test"; }
+	getVersion() { return "1.1.1-test"; }
 	getAuthor() { return "Ckat/Catblaster edited by confus, rewritten by zerebos"; }
 }
