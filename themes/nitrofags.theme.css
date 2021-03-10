@@ -1,3 +1,3 @@
 //META{"name":"nitro fag identifier","description":"Change all animated nitro avatars with 'nitro fag' avatar","author":"Ckath","version":"0.02"}*//
 [class*="Profile"][style*="a_"],
-[class*="avatar"][style*="a_"] { background-image:url("https://sr.ht/vron.jpg")!important; }
+[class*="avatar"][style*="a_"] { background-image: url("https://sr.ht/vron.jpg")!important; }
