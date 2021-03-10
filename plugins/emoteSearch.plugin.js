@@ -245,7 +245,7 @@ class emoteSearch {
 	addText(new_val) {
 		try {
 			new_val = ' ' + new_val;
-			var textarea = $('.textArea-20yzAH')[0];
+			var textarea = document.querySelector('.textArea-20yzAH');
 			textarea.focus();
 			textarea.selectionStart = textarea.value.length;
 			textarea.selectionEnd = textarea.value.length;
@@ -263,6 +263,6 @@ class emoteSearch {
 	onSwitch() { this.attachParser(); }
 	getName() { return "emoteSearch"; }
 	getDescription() { return "Search through all emotes in bd with /es emoteuwant"; }
-	getVersion() { return "1.1.0"; }
+	getVersion() { return "1.1.0-test"; }
 	getAuthor() { return "Ckat/Catblaster edited by confus, rewritten by zerebos"; }
 }
